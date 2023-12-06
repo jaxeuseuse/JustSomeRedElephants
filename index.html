@@ -89,7 +89,7 @@
     }
 
     function updateScore() {
-      scoreElement.textContent = 'Score: ' + (snake.cells.length - 4);
+      scoreElement.textContent = 'Score: ' + Math.max(0, snake.cells.length - 4);
     }
 
     function updateHighScore() {
