@@ -104,12 +104,12 @@
     }
 
     function updateScore() {
-      scoreElement.textContent = 'Score: ' + Math.max(0, snake.cells.length - 4);
+      scoreElement.textContent = 'Score: ' + (snake.cells.length - 1);
     }
 
     function updateHighScore() {
-      if (snake.cells.length - 4 > highScore) {
-        highScore = snake.cells.length - 4;
+      if (snake.cells.length - 1 > highScore) {
+        highScore = snake.cells.length - 1;
         highScoreElement.textContent = 'High Score: ' + highScore;
       }
     }
