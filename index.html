@@ -75,7 +75,7 @@
     var pauseButton = document.getElementById('pause-button');
 
     var highScore = 0;
-    var speed = 3; // Adjusted the speed
+    var speed = 100; // Adjusted the speed to a lower value for consistency
     var grid = 16;
     var count = 0;
     var paused = false;
@@ -104,12 +104,12 @@
     }
 
     function updateScore() {
-      scoreElement.textContent = 'Score: ' + (snake.cells.length - 1);
+      scoreElement.textContent = 'Score: ' + snake.cells.length;
     }
 
     function updateHighScore() {
-      if (snake.cells.length - 1 > highScore) {
-        highScore = snake.cells.length - 1;
+      if (snake.cells.length > highScore) {
+        highScore = snake.cells.length;
         highScoreElement.textContent = 'High Score: ' + highScore;
       }
     }
