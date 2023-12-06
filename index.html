@@ -170,6 +170,27 @@
       if (e.which === 32) {
         togglePause();
       }
+
+      if (paused) {
+        return;
+      }
+
+      if (e.which === 37 && snake.dx === 0) {
+        snake.dx = -grid;
+        snake.dy = 0;
+      }
+      else if (e.which === 38 && snake.dy === 0) {
+        snake.dy = -grid;
+        snake.dx = 0;
+      }
+      else if (e.which === 39 && snake.dx === 0) {
+        snake.dx = grid;
+        snake.dy = 0;
+      }
+      else if (e.which === 40 && snake.dy === 0) {
+        snake.dy = grid;
+        snake.dx = 0;
+      }
     });
 
     function loop() {
@@ -179,11 +200,6 @@
         return;
       }
 
-      if (++count < speed) {
-        return;
-      }
-
-      count = 0;
       context.clearRect(0, 0, canvas.width, canvas.height);
 
       snake.x += snake.dx;
@@ -220,25 +236,6 @@
           if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
             showGameOverPopup();
           }
-        }
-      });
-
-      document.addEventListener('keydown', function (e) {
-        if (e.which === 37 && snake.dx === 0) {
-          snake.dx = -grid;
-          snake.dy = 0;
-        }
-        else if (e.which === 38 && snake.dy === 0) {
-          snake.dy = -grid;
-          snake.dx = 0;
-        }
-        else if (e.which === 39 && snake.dx === 0) {
-          snake.dx = grid;
-          snake.dy = 0;
-        }
-        else if (e.which === 40 && snake.dy === 0) {
-          snake.dy = grid;
-          snake.dx = 0;
         }
       });
     }
