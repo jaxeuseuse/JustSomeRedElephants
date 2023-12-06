@@ -28,6 +28,11 @@
       top: 10px;
       right: 10px;
     }
+    #level {
+      position: absolute;
+      top: 10px;
+      center: 10px;
+    }
     #game-over-popup {
       display: none;
       position: absolute;
@@ -47,28 +52,41 @@
       border: none;
       cursor: pointer;
     }
+    #pause-button {
+      padding: 10px;
+      background: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <canvas width="400" height="400" id="game"></canvas>
   <div id="score">Score: 0</div>
   <div id="high-score">High Score: 0</div>
+  <div id="level">Level: 1</div>
   <div id="game-over-popup">
     <p>Game Over!</p>
     <button id="restart-button">Restart</button>
   </div>
+  <div id="pause-button">Pause</div>
   <script>
     var canvas = document.getElementById('game');
     var context = canvas.getContext('2d');
     var scoreElement = document.getElementById('score');
     var highScoreElement = document.getElementById('high-score');
+    var levelElement = document.getElementById('level');
     var gameOverPopup = document.getElementById('game-over-popup');
     var restartButton = document.getElementById('restart-button');
+    var pauseButton = document.getElementById('pause-button');
 
     var highScore = 0;
-
+    var level = 1;
+    var speed = 4;
     var grid = 16;
     var count = 0;
+    var paused = false;
 
     var snake = {
       x: 160,
@@ -82,6 +100,11 @@
     var apple = {
       x: 320,
       y: 320
+    };
+
+    var audio = {
+      eat: new Audio('https://freesound.org/data/previews/170/170841_2437358-lq.mp3'),
+      die: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3')
     };
 
     function getRandomInt(min, max) {
@@ -99,6 +122,12 @@
       }
     }
 
+    function updateLevel() {
+      level = Math.floor((snake.cells.length - 4) / 10) + 1;
+      levelElement.textContent = 'Level: ' + level;
+      speed = 4 + level;
+    }
+
     function restartGame() {
       snake.x = 160;
       snake.y = 160;
@@ -111,25 +140,46 @@
       apple.y = getRandomInt(0, 25) * grid;
 
       updateScore();
+      updateLevel();
       hideGameOverPopup();
     }
 
     function showGameOverPopup() {
       gameOverPopup.style.display = 'block';
+      audio.die.play();
     }
 
     function hideGameOverPopup() {
       gameOverPopup.style.display = 'none';
     }
 
+    function togglePause() {
+      paused = !paused;
+      pauseButton.textContent = paused ? 'Resume' : 'Pause';
+    }
+
     restartButton.addEventListener('click', function () {
       restartGame();
+    });
+
+    pauseButton.addEventListener('click', function () {
+      togglePause();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.which === 32) {
+        togglePause();
+      }
     });
 
     function loop() {
       requestAnimationFrame(loop);
 
-      if (++count < 4) {
+      if (paused) {
+        return;
+      }
+
+      if (++count < speed) {
         return;
       }
 
@@ -162,6 +212,8 @@
           apple.y = getRandomInt(0, 25) * grid;
           updateScore();
           updateHighScore();
+          updateLevel();
+          audio.eat.play();
         }
 
         for (var i = index + 1; i < snake.cells.length; i++) {
@@ -170,25 +222,27 @@
           }
         }
       });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.which === 37 && snake.dx === 0) {
+          snake.dx = -grid;
+          snake.dy = 0;
+        }
+        else if (e.which === 38 && snake.dy === 0) {
+          snake.dy = -grid;
+          snake.dx = 0;
+        }
+        else if (e.which === 39 && snake.dx === 0) {
+          snake.dx = grid;
+          snake.dy = 0;
+        }
+        else if (e.which === 40 && snake.dy === 0) {
+          snake.dy = grid;
+          snake.dx = 0;
+        }
+      });
     }
 
-    document.addEventListener('keydown', function (e) {
-      if (e.which === 37 && snake.dx === 0) {
-        snake.dx = -grid;
-        snake.dy = 0;
-      } else if (e.which === 38 && snake.dy === 0) {
-        snake.dy = -grid;
-        snake.dx = 0;
-      } else if (e.which === 39 && snake.dx === 0) {
-        snake.dx = grid;
-        snake.dy = 0;
-      } else if (e.which === 40 && snake.dy === 0) {
-        snake.dy = grid;
-        snake.dx = 0;
-      }
-    });
-
-    restartGame(); // Initialize the game
     requestAnimationFrame(loop);
   </script>
 </body>
