@@ -1,34 +1,249 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
   <title>Snake Game</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Arial', sans-serif;
+    }
+    canvas {
+      border: 1px solid white;
+    }
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    #high-score {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    #level {
+      position: absolute;
+      top: 10px;
+      center: 10px;
+    }
+    #game-over-popup {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background: rgba(255, 0, 0, 0.8);
+      border: 2px solid white;
+      border-radius: 5px;
+      text-align: center;
+    }
+    #restart-button {
+      padding: 10px;
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #pause-button {
+      padding: 10px;
+      background: blue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div id="game-container">
-    <div id="game-board">
-      <!-- Snake and food elements will be added dynamically using JavaScript -->
-    </div>
-
-    <div id="main-menu" class="popup">
-      <h1>Snake Game</h1>
-      <label for="speed">Speed:</label>
-      <select id="speed">
-        <option value="100">Slow</option>
-        <option value="75" selected>Medium</option>
-        <option value="50">Fast</option>
-      </select>
-      <button onclick="startGame()">Start</button>
-    </div>
-    
-    <div id="score-board">
-      <p>Score: <span id="score">0</span></p>
-      <p>High Score: <span id="high-score">0</span></p>
-    </div>
+  <canvas width="400" height="400" id="game"></canvas>
+  <div id="score">Score: 0</div>
+  <div id="high-score">High Score: 0</div>
+  <div id="level">Level: 1</div>
+  <div id="game-over-popup">
+    <p>Game Over!</p>
+    <button id="restart-button">Restart</button>
   </div>
+  <div id="pause-button">Pause</div>
+  <script>
+    var canvas = document.getElementById('game');
+    var context = canvas.getContext('2d');
+    var scoreElement = document.getElementById('score');
+    var highScoreElement = document.getElementById('high-score');
+    var levelElement = document.getElementById('level');
+    var gameOverPopup = document.getElementById('game-over-popup');
+    var restartButton = document.getElementById('restart-button');
+    var pauseButton = document.getElementById('pause-button');
 
-  <script src="script.js"></script>
+    var highScore = 0;
+    var level = 1;
+    var speed = 4;
+    var grid = 16;
+    var count = 0;
+    var paused = false;
+
+    var snake = {
+      x: 160,
+      y: 160,
+      dx: 0,
+      dy: 0,
+      cells: [],
+      maxCells: 1
+    };
+
+    var apple = {
+      x: 320,
+      y: 320
+    };
+
+    var audio = {
+      eat: new Audio('https://freesound.org/data/previews/170/170841_2437358-lq.mp3'),
+      die: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3')
+    };
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function updateScore() {
+      scoreElement.textContent = 'Score: ' + Math.max(0, snake.cells.length - 4);
+    }
+
+    function updateHighScore() {
+      if (snake.cells.length - 4 > highScore) {
+        highScore = snake.cells.length - 4;
+        highScoreElement.textContent = 'High Score: ' + highScore;
+      }
+    }
+
+    function updateLevel() {
+      level = Math.floor((snake.cells.length - 4) / 10) + 1;
+      levelElement.textContent = 'Level: ' + level;
+      speed = 4 + level;
+    }
+
+    function restartGame() {
+      snake.x = 160;
+      snake.y = 160;
+      snake.cells = [];
+      snake.maxCells = 1;
+      snake.dx = 0;
+      snake.dy = 0;
+
+      apple.x = getRandomInt(0, 25) * grid;
+      apple.y = getRandomInt(0, 25) * grid;
+
+      updateScore();
+      updateLevel();
+      hideGameOverPopup();
+    }
+
+    function showGameOverPopup() {
+      gameOverPopup.style.display = 'block';
+      audio.die.play();
+    }
+
+    function hideGameOverPopup() {
+      gameOverPopup.style.display = 'none';
+    }
+
+    function togglePause() {
+      paused = !paused;
+      pauseButton.textContent = paused ? 'Resume' : 'Pause';
+    }
+
+    restartButton.addEventListener('click', function () {
+      restartGame();
+    });
+
+    pauseButton.addEventListener('click', function () {
+      togglePause();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.which === 32) {
+        togglePause();
+      }
+    });
+
+    function loop() {
+      requestAnimationFrame(loop);
+
+      if (paused) {
+        return;
+      }
+
+      if (++count < speed) {
+        return;
+      }
+
+      count = 0;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      snake.x += snake.dx;
+      snake.y += snake.dy;
+
+      if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+        showGameOverPopup();
+      }
+
+      snake.cells.unshift({ x: snake.x, y: snake.y });
+
+      if (snake.cells.length > snake.maxCells) {
+        snake.cells.pop();
+      }
+
+      context.fillStyle = 'red';
+      context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+      context.fillStyle = 'green';
+      snake.cells.forEach(function (cell, index) {
+        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+        if (cell.x === apple.x && cell.y === apple.y) {
+          snake.maxCells++;
+          apple.x = getRandomInt(0, 25) * grid;
+          apple.y = getRandomInt(0, 25) * grid;
+          updateScore();
+          updateHighScore();
+          updateLevel();
+          audio.eat.play();
+        }
+
+        for (var i = index + 1; i < snake.cells.length; i++) {
+          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+            showGameOverPopup();
+          }
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.which === 37 && snake.dx === 0) {
+          snake.dx = -grid;
+          snake.dy = 0;
+        }
+        else if (e.which === 38 && snake.dy === 0) {
+          snake.dy = -grid;
+          snake.dx = 0;
+        }
+        else if (e.which === 39 && snake.dx === 0) {
+          snake.dx = grid;
+          snake.dy = 0;
+        }
+        else if (e.which === 40 && snake.dy === 0) {
+          snake.dy = grid;
+          snake.dx = 0;
+        }
+      });
+    }
+
+    requestAnimationFrame(loop);
+  </script>
 </body>
 </html>
