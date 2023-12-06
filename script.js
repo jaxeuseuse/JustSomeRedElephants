@@ -1,4 +1,4 @@
-const mainMenu = document.getElementById("main-menu");
+const gameContainer = document.getElementById("game-container");
 const gameBoard = document.getElementById("game-board");
 const scoreElement = document.getElementById("score");
 const highScoreElement = document.getElementById("high-score");
@@ -12,10 +12,9 @@ let highScore = 0;
 let gameInterval;
 
 function startGame() {
-  mainMenu.style.display = "none";
-  gameBoard.style.display = "block";
+  gameContainer.removeChild(document.getElementById("main-menu"));
 
-  speed = parseInt(speedSelect.value);
+  const speed = parseInt(speedSelect.value);
 
   gameInterval = setInterval(() => {
     move();
@@ -135,11 +134,24 @@ function endGame() {
 }
 
 function resetGame() {
-  mainMenu.style.display = "flex";
-  gameBoard.style.display = "none";
   snake = [{ x: 10, y: 10 }];
   food = { x: 5, y: 5 };
   direction = "right";
-  score = 0;
-  draw();
+
+  // Show Main Menu Again
+  const mainMenu = document.createElement("div");
+  mainMenu.id = "main-menu";
+  mainMenu.className = "popup";
+  mainMenu.innerHTML = `
+    <h1>Snake Game</h1>
+    <label for="speed">Speed:</label>
+    <select id="speed">
+      <option value="100">Slow</option>
+      <option value="75" selected>Medium</option>
+      <option value="50">Fast</option>
+    </select>
+    <button onclick="startGame()">Start</button>
+  `;
+
+  gameContainer.appendChild(mainMenu);
 }
