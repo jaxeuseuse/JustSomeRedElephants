@@ -7,24 +7,26 @@
   <title>Snake Game</title>
 </head>
 <body>
-  <div id="main-menu">
-    <h1>Snake Game</h1>
-    <label for="speed">Speed:</label>
-    <select id="speed">
-      <option value="100">Slow</option>
-      <option value="75" selected>Medium</option>
-      <option value="50">Fast</option>
-    </select>
-    <button onclick="startGame()">Start</button>
-  </div>
-  
-  <div id="game-board">
-    <!-- Snake and food elements will be added dynamically using JavaScript -->
-  </div>
+  <div id="game-container">
+    <div id="game-board">
+      <!-- Snake and food elements will be added dynamically using JavaScript -->
+    </div>
 
-  <div id="score-board">
-    <p>Score: <span id="score">0</span></p>
-    <p>High Score: <span id="high-score">0</span></p>
+    <div id="main-menu" class="popup">
+      <h1>Snake Game</h1>
+      <label for="speed">Speed:</label>
+      <select id="speed">
+        <option value="100">Slow</option>
+        <option value="75" selected>Medium</option>
+        <option value="50">Fast</option>
+      </select>
+      <button onclick="startGame()">Start</button>
+    </div>
+    
+    <div id="score-board">
+      <p>Score: <span id="score">0</span></p>
+      <p>High Score: <span id="high-score">0</span></p>
+    </div>
   </div>
 
   <script src="script.js"></script>
