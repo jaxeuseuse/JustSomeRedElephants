@@ -67,7 +67,7 @@
   <div id="high-score">High Score: 0</div>
   <div id="level">Level: 1</div>
   <div id="game-over-popup">
-    <p>Game Over!</p>
+    <p id="game-over-message"></p>
     <button id="restart-button">Restart</button>
   </div>
   <div id="pause-button">Pause</div>
@@ -83,9 +83,8 @@
 
     var highScore = 0;
     var level = 1;
-    var speed = 4;
+    var speed = 8; // Adjusted for slower speed
     var grid = 16;
-    var count = 0;
     var paused = false;
 
     var snake = {
@@ -94,7 +93,7 @@
       dx: 0,
       dy: 0,
       cells: [],
-      maxCells: 1
+      maxCells: 4 // Start the snake at 4 pixels
     };
 
     var apple = {
@@ -125,14 +124,14 @@
     function updateLevel() {
       level = Math.floor((snake.cells.length - 4) / 10) + 1;
       levelElement.textContent = 'Level: ' + level;
-      speed = 4 + level;
+      speed = 8 + level; // Adjusted speed
     }
 
     function restartGame() {
       snake.x = 160;
       snake.y = 160;
       snake.cells = [];
-      snake.maxCells = 1;
+      snake.maxCells = 4;
       snake.dx = 0;
       snake.dy = 0;
 
@@ -146,6 +145,7 @@
 
     function showGameOverPopup() {
       gameOverPopup.style.display = 'block';
+      document.getElementById('game-over-message').textContent = 'Your Score: ' + (snake.cells.length - 1);
       audio.die.play();
     }
 
@@ -242,6 +242,8 @@
         }
       });
     }
+
+    var count = 0; // Add count variable
 
     requestAnimationFrame(loop);
   </script>
