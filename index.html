@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snake Game</title>
   <style>
     html, body {
@@ -75,7 +77,6 @@
     var pauseButton = document.getElementById('pause-button');
 
     var highScore = 0;
-    var speed = 9;
     var grid = 16;
     var count = 0;
     var paused = false;
@@ -100,7 +101,9 @@
       die: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3')
     };
 
-    var debounce = function (func, wait, immediate) {
+    var lastFrameTime = 0;
+
+    function debounce(func, wait, immediate) {
       var timeout;
       return function () {
         var context = this,
@@ -114,7 +117,7 @@
         timeout = setTimeout(later, wait);
         if (callNow) func.apply(context, args);
       };
-    };
+    }
 
     var debouncedHandleSnakeDirection = debounce(handleSnakeDirection, 150);
 
@@ -201,22 +204,28 @@
       }
     }
 
-    function loop() {
+    function loop(timestamp) {
+      var deltaTime = (timestamp - lastFrameTime) / 1000; // Convert to seconds
+      lastFrameTime = timestamp;
+
       requestAnimationFrame(loop);
 
       if (paused) {
         return;
       }
 
-      if (++count < speed) {
+      count += deltaTime;
+
+      if (count < 1) {
         return;
       }
 
-      count = 0;
+      count -= 1;
       context.clearRect(0, 0, canvas.width, canvas.height);
 
-      snake.x += snake.dx;
-      snake.y += snake.dy;
+      snake.x += snake.dx * deltaTime * 100; // Multiply by 100 for speed adjustment
+
+      snake.y += snake.dy * deltaTime * 100;
 
       if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
         showGameOverPopup();
