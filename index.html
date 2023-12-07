@@ -95,11 +95,6 @@
       y: 320
     };
 
-    var audio = {
-      eat: new Audio('https://freesound.org/data/previews/170/170841_2437358-lq.mp3'),
-      die: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3')
-    };
-
     var debounce = function (func, wait, immediate) {
       var timeout;
       return function () {
@@ -150,7 +145,6 @@
 
     function showGameOverPopup() {
       gameOverPopup.style.display = 'block';
-      audio.die.play();
     }
 
     function hideGameOverPopup() {
@@ -241,7 +235,6 @@
           apple.y = getRandomInt(0, 25) * grid;
           updateScore();
           updateHighScore();
-          audio.eat.play();
         }
 
         for (var i = index + 1; i < snake.cells.length; i++) {
