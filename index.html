@@ -73,13 +73,11 @@
     var gameOverPopup = document.getElementById('game-over-popup');
     var restartButton = document.getElementById('restart-button');
     var pauseButton = document.getElementById('pause-button');
-
     var highScore = 0;
-    var speed = 9; // Adjusted the speed for a faster snake
+    var speed = 8; // Adjusted the speed for a faster snake
     var grid = 16;
     var count = 0;
     var paused = false;
-
     var snake = {
       x: 160,
       y: 160,
@@ -88,34 +86,26 @@
       cells: [],
       maxCells: 1
     };
-
     var apple = {
       x: 320,
       y: 320
     };
-<audio id="game-audio" controls preload="auto">
-    <source src="bigredsplotch/audio/jump-101soundboards.mp3" type="audio/mp3">
-    Your browser does not support the audio tag.
-</audio>
-
-var audio = {
-    eat: new Audio('bigredsplotch/audio/jump-101soundboards.mp3'),
-};
+    var audio = {
+      eat: new Audio('https://freesound.org/data/previews/170/170841_2437358-lq.mp3'),
+      die: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3')
+    };
     function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     }
-
     function updateScore() {
       scoreElement.textContent = 'Score: ' + snake.cells.length;
     }
-
     function updateHighScore() {
       if (snake.cells.length > highScore) {
         highScore = snake.cells.length;
         highScoreElement.textContent = 'High Score: ' + highScore;
       }
     }
-
     function restartGame() {
       snake.x = 160;
       snake.y = 160;
@@ -123,35 +113,28 @@ var audio = {
       snake.maxCells = 1;
       snake.dx = 0;
       snake.dy = 0;
-
       apple.x = getRandomInt(0, 25) * grid;
       apple.y = getRandomInt(0, 25) * grid;
-
       updateScore();
       hideGameOverPopup();
     }
-
     function showGameOverPopup() {
       gameOverPopup.style.display = 'block';
+      audio.die.play();
     }
-
     function hideGameOverPopup() {
       gameOverPopup.style.display = 'none';
     }
-
     function togglePause() {
       paused = !paused;
       pauseButton.textContent = paused ? 'Resume' : 'Pause';
     }
-
     restartButton.addEventListener('click', function () {
       restartGame();
     });
-
     pauseButton.addEventListener('click', function () {
       togglePause();
     });
-
     document.addEventListener('keydown', function (e) {
       if (e.which === 32) {
         togglePause();
@@ -179,50 +162,27 @@ var audio = {
     function loop() {
       requestAnimationFrame(loop);
 
-      if (paused) {
-        return;
-      }
-
-      if (++count < speed) {
-        return;
-      }
-
-      count = 0;
-      context.clearRect(0, 0, canvas.width, canvas.height);
-
-      snake.x += snake.dx;
-      snake.y += snake.dy;
-
-      if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
-        showGameOverPopup();
-      }
-
-      snake.cells.unshift({ x: snake.x, y: snake.y });
-
-      if (snake.cells.length > snake.maxCells) {
-        snake.cells.pop();
-      }
-
-      context.fillStyle = 'red';
-      context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
-
-      context.fillStyle = 'green';
-      snake.cells.forEach(function (cell, index) {
-        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
-
-        if (cell.x === apple.x && cell.y === apple.y) {
-          snake.maxCells++;
-          apple.x = getRandomInt(0, 25) * grid;
-          apple.y = getRandomInt(0, 25) * grid;
-          updateScore();
-          updateHighScore();
-          audio.eat.play();
-        }
-
-        for (var i = index + 1; i < snake.cells.length; i++) {
-          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-            showGameOverPopup();
+@@ -206,25 +224,6 @@
           }
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.which === 37 && snake.dx === 0) {
+          snake.dx = -grid;
+          snake.dy = 0;
+        }
+        else if (e.which === 38 && snake.dy === 0) {
+          snake.dy = -grid;
+          snake.dx = 0;
+        }
+        else if (e.which === 39 && snake.dx === 0) {
+          snake.dx = grid;
+          snake.dy = 0;
+        }
+        else if (e.which === 40 && snake.dy === 0) {
+          snake.dy = grid;
+          snake.dx = 0;
         }
       });
     }
