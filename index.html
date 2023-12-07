@@ -75,10 +75,11 @@
     var pauseButton = document.getElementById('pause-button');
 
     var highScore = 0;
-    var speed = 9; // Adjusted the speed for a faster snake
+    var speed = 9;
     var grid = 16;
     var count = 0;
     var paused = false;
+    var keyStates = {};
 
     var snake = {
       x: 160,
@@ -99,7 +100,6 @@
       die: new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3')
     };
 
-    // Debounce function
     var debounce = function (func, wait, immediate) {
       var timeout;
       return function () {
@@ -116,7 +116,6 @@
       };
     };
 
-    // Debounced function for handling snake direction
     var debouncedHandleSnakeDirection = debounce(handleSnakeDirection, 150);
 
     function getRandomInt(min, max) {
@@ -172,29 +171,31 @@
     });
 
     document.addEventListener('keydown', function (e) {
+      keyStates[e.which] = true;
+
       if (e.which === 32) {
         togglePause();
       } else if (!paused) {
-        debouncedHandleSnakeDirection(e);
+        handleSnakeDirection();
       }
     });
 
-    // Updated handleSnakeDirection to handle both arrow keys and WASD keys
-    function handleSnakeDirection(e) {
-      if ((e.which === 37 || e.which === 65) && snake.dx === 0) {
-        // Left arrow key or A key
+    document.addEventListener('keyup', function (e) {
+      keyStates[e.which] = false;
+      handleSnakeDirection();
+    });
+
+    function handleSnakeDirection() {
+      if ((keyStates[37] || keyStates[65]) && snake.dx === 0) {
         snake.dx = -grid;
         snake.dy = 0;
-      } else if ((e.which === 38 || e.which === 87) && snake.dy === 0) {
-        // Up arrow key or W key
+      } else if ((keyStates[38] || keyStates[87]) && snake.dy === 0) {
         snake.dy = -grid;
         snake.dx = 0;
-      } else if ((e.which === 39 || e.which === 68) && snake.dx === 0) {
-        // Right arrow key or D key
+      } else if ((keyStates[39] || keyStates[68]) && snake.dx === 0) {
         snake.dx = grid;
         snake.dy = 0;
-      } else if ((e.which === 40 || e.which === 83) && snake.dy === 0) {
-        // Down arrow key or S key
+      } else if ((keyStates[40] || keyStates[83]) && snake.dy === 0) {
         snake.dy = grid;
         snake.dx = 0;
       }
