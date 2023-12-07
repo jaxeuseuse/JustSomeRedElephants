@@ -66,16 +66,40 @@
 
     #speed-buttons {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
       display: flex;
       flex-direction: column;
     }
 
     #speed-buttons button {
-      margin-bottom: 5px;
-      padding: 8px;
+      margin-bottom: 10px;
+      padding: 15px;
       cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #speed-buttons-right {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #speed-buttons-right button {
+      margin-bottom: 10px;
+      padding: 15px;
+      cursor: pointer;
+      background: #FFC107;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
   </style>
 </head>
@@ -91,21 +115,23 @@
   <div id="pause-button">Pause</div>
   <!-- Speed buttons -->
   <div id="speed-buttons">
-    <button class="speed-button" data-speed="1">1</button>
-    <button class="speed-button" data-speed="2">2</button>
-    <button class="speed-button" data-speed="3">3</button>
-    <button class="speed-button" data-speed="4">4</button>
-    <button class="speed-button" data-speed="5">5</button>
-    <button class="speed-button" data-speed="6">6</button>
-    <button class="speed-button" data-speed="7">7</button>
-    <button class="speed-button" data-speed="8">8</button>
-    <button class="speed-button" data-speed="9">9</button>
-    <button class="speed-button" data-speed="10">10</button>
-    <button class="speed-button" data-speed="11">11</button>
-    <button class="speed-button" data-speed="12">12</button>
-    <button class="speed-button" data-speed="13">13</button>
-    <button class="speed-button" data-speed="14">14</button>
-    <button class="speed-button" data-speed="15">15</button>
+    <button class="speed-button" data-speed="1">WTF</button>
+    <button class="speed-button" data-speed="2">BANNANAS</button>
+    <button class="speed-button" data-speed="3">CRAZY</button>
+    <button class="speed-button" data-speed="4">HOW???</button>
+    <button class="speed-button" data-speed="5">MEH</button>
+    <button class="speed-button" data-speed="6">PERFECT</button>
+    <button class="speed-button" data-speed="7">NORMAL</button>
+  </div>
+
+  <div id="speed-buttons-right">
+    <button class="speed-button" data-speed="8">NOT BAD</button>
+    <button class="speed-button" data-speed="9">EASY</button>
+    <button class="speed-button" data-speed="10">MEH</button>
+    <button class="speed-button" data-speed="11">MID</button>
+    <button class="speed-button" data-speed="12">SNAIL</button>
+    <button class="speed-button" data-speed="13">SLOW POKE</button>
+    <button class="speed-button" data-speed="14">BRUH</button>
   </div>
 
   <script>
@@ -119,7 +145,7 @@
     var speedButtons = document.querySelectorAll('.speed-button');
 
     var highScore = 0;
-    var speed = 6; // Default speed
+    var speed = 7; // Default speed
     var grid = 16;
     var count = 0;
     var paused = false;
@@ -190,7 +216,7 @@
       togglePause();
     });
 
-    // Event listeners for speed buttons
+    // Event listener for speed buttons
     speedButtons.forEach(function (button) {
       button.addEventListener('click', function () {
         speed = parseInt(button.dataset.speed);
