@@ -179,22 +179,17 @@
       }
     });
 
-    // Updated handleSnakeDirection to handle both arrow keys and WASD keys
     function handleSnakeDirection(e) {
-      if ((e.which === 37 || e.which === 65) && snake.dx === 0) {
-        // Left arrow key or A key
+      if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
         snake.dy = 0;
-      } else if ((e.which === 38 || e.which === 87) && snake.dy === 0) {
-        // Up arrow key or W key
+      } else if (e.which === 38 && snake.dy === 0) {
         snake.dy = -grid;
         snake.dx = 0;
-      } else if ((e.which === 39 || e.which === 68) && snake.dx === 0) {
-        // Right arrow key or D key
+      } else if (e.which === 39 && snake.dx === 0) {
         snake.dx = grid;
         snake.dy = 0;
-      } else if ((e.which === 40 || e.which === 83) && snake.dy === 0) {
-        // Down arrow key or S key
+      } else if (e.which === 40 && snake.dy === 0) {
         snake.dy = grid;
         snake.dx = 0;
       }
