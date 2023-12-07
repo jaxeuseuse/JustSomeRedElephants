@@ -107,7 +107,7 @@
     var impossibleSpeedButton = document.getElementById('impossible-speed');
 
     var highScore = 0;
-    var speed = 7; // Default speed
+    var speed = 6; // Default speed
     var grid = 16;
     var count = 0;
     var paused = false;
@@ -202,11 +202,11 @@
     });
 
     desktopSpeedButton.addEventListener('click', function () {
-      speed = 12;
+      speed = 11;
     });
 
     impossibleSpeedButton.addEventListener('click', function () {
-      speed = 4;
+      speed = 3;
     });
 
     document.addEventListener('keydown', function (e) {
