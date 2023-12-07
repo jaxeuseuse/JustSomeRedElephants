@@ -223,9 +223,9 @@
       count -= 1;
       context.clearRect(0, 0, canvas.width, canvas.height);
 
-      snake.x += snake.dx * deltaTime * 9; // Multiply by 100 for speed adjustment
+      snake.x += snake.dx * deltaTime * 190; // Multiply by 100 for speed adjustment
 
-      snake.y += snake.dy * deltaTime * 9;
+      snake.y += snake.dy * deltaTime * 100;
 
       if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
         showGameOverPopup();
