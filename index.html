@@ -66,6 +66,33 @@
   </div>
   <div id="pause-button">Pause</div>
   <script>
+    var keyDown = false;
+  document.addEventListener('keydown', function (e) {
+    if (e.which === 32) {
+      togglePause();
+    } else if (!paused && !keyDown) {
+      keyDown = true;
+      handleSnakeDirection(e);
+    }
+  });
+  document.addEventListener('keyup', function () {
+    keyDown = false;
+  });
+  function handleSnakeDirection(e) {
+    if (e.which === 37 && snake.dx === 0) {
+      snake.dx = -grid;
+      snake.dy = 0;
+    } else if (e.which === 38 && snake.dy === 0) {
+      snake.dy = -grid;
+      snake.dx = 0;
+    } else if (e.which === 39 && snake.dx === 0) {
+      snake.dx = grid;
+      snake.dy = 0;
+    } else if (e.which === 40 && snake.dy === 0) {
+      snake.dy = grid;
+      snake.dx = 0;
+    }
+  }
     var canvas = document.getElementById('game');
     var context = canvas.getContext('2d');
     var scoreElement = document.getElementById('score');
