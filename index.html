@@ -93,11 +93,14 @@
       x: 320,
       y: 320
     };
+<audio id="game-audio" controls preload="auto">
+    <source src="bigredsplotch/audio/jump-101soundboards.mp3" type="audio/mp3">
+    Your browser does not support the audio tag.
+</audio>
 
-    var audio = {
-      eat: new Audio('bigredsplotch/audio/jump-101soundboards.mp3')
-    };
-
+var audio = {
+    eat: new Audio('bigredsplotch/audio/jump-101soundboards.mp3'),
+};
     function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     }
@@ -130,7 +133,6 @@
 
     function showGameOverPopup() {
       gameOverPopup.style.display = 'block';
-      audio.die.play();
     }
 
     function hideGameOverPopup() {
