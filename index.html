@@ -29,6 +29,12 @@
       left: 10px;
     }
 
+    #high-score {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
     #game-over-popup {
       display: none;
       position: absolute;
@@ -182,6 +188,7 @@
 <body>
   <canvas width="400" height="400" id="game"></canvas>
   <div id="score">Score: 0</div>
+  <div id="high-score">High Score: 0</div>
   <div id="game-over-popup">
     <p>Game Over!</p>
     <button id="restart-button">Restart</button>
@@ -201,57 +208,30 @@
 
   <!-- Speed buttons -->
   <div id="speed-buttons">
-    <button class="speed-button" data-speed="1">
-      WTF <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="2">
-      BANNANAS <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="3">
-      CRAZY <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="4">
-      HOW??? <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="5">
-      DAMNNNN <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="6">
-      PERFECT <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="7">
-      DEFAULT <span class="high-score">0</span>
-    </button>
+    <button class="speed-button" data-speed="1">WTF</button>
+    <button class="speed-button" data-speed="2">BANNANAS</button>
+    <button class="speed-button" data-speed="3">CRAZY</button>
+    <button class="speed-button" data-speed="4">HOW???</button>
+    <button class="speed-button" data-speed="5">DAMNNNN</button>
+    <button class="speed-button" data-speed="6">PERFECT</button>
+    <button class="speed-button" data-speed="7">DEFAULT</button>
   </div>
 
   <div id="speed-buttons-right">
-    <button class="speed-button" data-speed="8">
-      NOT BAD <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="9">
-      EASY <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="10">
-      MEH <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="11">
-      MID <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="12">
-      SNAIL <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="13">
-      SLOW POKE <span class="high-score">0</span>
-    </button>
-    <button class="speed-button" data-speed="14">
-      BRUH <span class="high-score">0</span>
-    </button>
+    <button class="speed-button" data-speed="8">NOT BAD</button>
+    <button class="speed-button" data-speed="9">EASY</button>
+    <button class="speed-button" data-speed="10">MEH</button>
+    <button class="speed-button" data-speed="11">MID</button>
+    <button class="speed-button" data-speed="12">SNAIL</button>
+    <button class="speed-button" data-speed="13">SLOW POKE</button>
+    <button class="speed-button" data-speed="14">BRUH</button>
   </div>
 
   <script>
     var canvas = document.getElementById('game');
     var context = canvas.getContext('2d');
     var scoreElement = document.getElementById('score');
+    var highScoreElement = document.getElementById('high-score');
     var gameOverPopup = document.getElementById('game-over-popup');
     var restartButton = document.getElementById('restart-button');
     var pauseButton = document.getElementById('pause-button');
@@ -260,7 +240,7 @@
     var offLabel = document.getElementById('off-label');
     var speedButtons = document.querySelectorAll('.speed-button');
 
-    var highScores = {};
+    var highScore = 0;
     var speed = 7; // Default speed
     var grid = 16;
     var count = 0;
@@ -287,13 +267,13 @@
     }
 
     function updateScore() {
-      scoreElement.textContent = 'Score: ' + (snake.cells.length - 1); // Fix scoring issue
+      scoreElement.textContent = 'Score: ' + snake.cells.length;
     }
 
-    function updateHighScoreForSpeed(speed, score) {
-      if (!highScores[speed] || score > highScores[speed]) {
-        highScores[speed] = score;
-        document.querySelector(`.speed-button[data-speed="${speed}"] .high-score`).textContent = score;
+    function updateHighScore() {
+      if (snake.cells.length > highScore) {
+        highScore = snake.cells.length;
+        highScoreElement.textContent = 'High Score: ' + highScore;
       }
     }
 
@@ -310,9 +290,6 @@
 
       updateScore();
       hideGameOverPopup();
-
-      // Reset high score for the current speed
-      updateHighScoreForSpeed(speed, 0);
     }
 
     function showGameOverPopup() {
@@ -406,46 +383,47 @@
       snake.x += snake.dx;
       snake.y += snake.dy;
 
-  if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
-    if (!specialSwitchState) {
-      handleGameOver();
-    } else {
-      // Wrap around the canvas
-      snake.x = (snake.x + canvas.width) % canvas.width;
-      snake.y = (snake.y + canvas.height) % canvas.height;
-    }
-  }
-
-  snake.cells.unshift({ x: snake.x, y: snake.y });
-
-  if (snake.cells.length > snake.maxCells) {
-    snake.cells.pop();
-  }
-
-  context.fillStyle = 'red';
-  context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
-
-  context.fillStyle = 'green';
-  snake.cells.forEach(function (cell, index) {
-    context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
-
-    if (cell.x === apple.x && cell.y === apple.y) {
-      snake.maxCells++;
-      apple.x = getRandomInt(0, 25) * grid;
-      apple.y = getRandomInt(0, 25) * grid;
-      updateScore();
-      updateHighScoreForSpeed(speed, snake.maxCells);
-    }
-
-    for (var i = index + 1; i < snake.cells.length; i++) {
-      if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-        handleGameOver();
+      if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+        if (!specialSwitchState) {
+          handleGameOver();
+        } else {
+          // Wrap around the canvas
+          snake.x = (snake.x + canvas.width) % canvas.width;
+          snake.y = (snake.y + canvas.height) % canvas.height;
+        }
       }
-    }
-  });
-}
 
-requestAnimationFrame(loop);
-</script>
+      snake.cells.unshift({ x: snake.x, y: snake.y });
+
+      if (snake.cells.length > snake.maxCells) {
+        snake.cells.pop();
+      }
+
+      context.fillStyle = 'red';
+      context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+      context.fillStyle = 'green';
+      snake.cells.forEach(function (cell, index) {
+        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+        if (cell.x === apple.x && cell.y === apple.y) {
+          snake.maxCells++;
+          apple.x = getRandomInt(0, 25) * grid;
+          apple.y = getRandomInt(0, 25) * grid;
+          updateScore();
+          updateHighScore();
+        }
+
+        for (var i = index + 1; i < snake.cells.length; i++) {
+          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+            handleGameOver();
+          }
+        }
+      });
+    }
+
+    requestAnimationFrame(loop);
+  </script>
 </body>
+
 </html>
