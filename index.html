@@ -64,16 +64,28 @@
       cursor: pointer;
     }
 
-    #wall-switch {
+    #special-switch {
       position: absolute;
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      padding: 10px;
-      background: #FF9800;
-      color: white;
-      border: none;
+      width: 60px;
+      height: 30px;
+      background: #555;
+      border-radius: 15px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      user-select: none;
+    }
+
+    #toggle-circle {
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s;
     }
 
     #speed-buttons {
@@ -125,7 +137,12 @@
     <button id="restart-button">Restart</button>
   </div>
   <div id="pause-button">Pause</div>
-  <div id="wall-switch" onclick="toggleWallSwitch()">Wall Switch</div>
+
+  <!-- Toggle switch for "special" -->
+  <div id="special-switch" onclick="toggleSpecialSwitch()">
+    <div id="toggle-circle"></div>
+  </div>
+
   <!-- Speed buttons -->
   <div id="speed-buttons">
     <button class="speed-button" data-speed="1">WTF</button>
@@ -155,7 +172,8 @@
     var gameOverPopup = document.getElementById('game-over-popup');
     var restartButton = document.getElementById('restart-button');
     var pauseButton = document.getElementById('pause-button');
-    var wallSwitchButton = document.getElementById('wall-switch');
+    var specialSwitch = document.getElementById('special-switch');
+    var toggleCircle = document.getElementById('toggle-circle');
     var speedButtons = document.querySelectorAll('.speed-button');
 
     var highScore = 0;
@@ -163,7 +181,7 @@
     var grid = 16;
     var count = 0;
     var paused = false;
-    var wallSwitchState = false;
+    var specialSwitchState = false;
     var keyStates = {};
 
     var snake = {
@@ -223,8 +241,9 @@
       pauseButton.textContent = paused ? 'Resume' : 'Pause';
     }
 
-    function toggleWallSwitch() {
-      wallSwitchState = !wallSwitchState;
+    function toggleSpecialSwitch() {
+      specialSwitchState = !specialSwitchState;
+      toggleCircle.style.transform = specialSwitchState ? 'translateX(30px)' : 'translateX(0)';
     }
 
     restartButton.addEventListener('click', function () {
@@ -233,10 +252,6 @@
 
     pauseButton.addEventListener('click', function () {
       togglePause();
-    });
-
-    wallSwitchButton.addEventListener('click', function () {
-      toggleWallSwitch();
     });
 
     // Event listener for speed buttons
@@ -263,16 +278,16 @@
 
     function handleSnakeDirection() {
       if ((keyStates[37] || keyStates[65]) && snake.dx === 0) {
-        snake.dx = wallSwitchState ? (snake.x <= 0 ? canvas.width - grid : -grid) : -grid;
+        snake.dx = specialSwitchState ? (snake.x <= 0 ? canvas.width - grid : -grid) : -grid;
         snake.dy = 0;
       } else if ((keyStates[38] || keyStates[87]) && snake.dy === 0) {
-        snake.dy = wallSwitchState ? (snake.y <= 0 ? canvas.height - grid : -grid) : -grid;
+        snake.dy = specialSwitchState ? (snake.y <= 0 ? canvas.height - grid : -grid) : -grid;
         snake.dx = 0;
       } else if ((keyStates[39] || keyStates[68]) && snake.dx === 0) {
-        snake.dx = wallSwitchState ? (snake.x >= canvas.width - grid ? -canvas.width + grid : grid) : grid;
+        snake.dx = specialSwitchState ? (snake.x >= canvas.width - grid ? -canvas.width + grid : grid) : grid;
         snake.dy = 0;
       } else if ((keyStates[40] || keyStates[83]) && snake.dy === 0) {
-        snake.dy = wallSwitchState ? (snake.y >= canvas.height - grid ? -canvas.height + grid : grid) : grid;
+        snake.dy = specialSwitchState ? (snake.y >= canvas.height - grid ? -canvas.height + grid : grid) : grid;
         snake.dx = 0;
       }
     }
