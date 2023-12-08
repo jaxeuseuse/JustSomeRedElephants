@@ -64,6 +64,18 @@
       cursor: pointer;
     }
 
+    #wall-switch {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px;
+      background: #FF9800;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
     #speed-buttons {
       position: absolute;
       top: 50%;
@@ -113,6 +125,7 @@
     <button id="restart-button">Restart</button>
   </div>
   <div id="pause-button">Pause</div>
+  <div id="wall-switch" onclick="toggleWallSwitch()">Wall Switch</div>
   <!-- Speed buttons -->
   <div id="speed-buttons">
     <button class="speed-button" data-speed="1">WTF</button>
@@ -142,6 +155,7 @@
     var gameOverPopup = document.getElementById('game-over-popup');
     var restartButton = document.getElementById('restart-button');
     var pauseButton = document.getElementById('pause-button');
+    var wallSwitchButton = document.getElementById('wall-switch');
     var speedButtons = document.querySelectorAll('.speed-button');
 
     var highScore = 0;
@@ -149,6 +163,7 @@
     var grid = 16;
     var count = 0;
     var paused = false;
+    var wallSwitchState = false;
     var keyStates = {};
 
     var snake = {
@@ -208,12 +223,20 @@
       pauseButton.textContent = paused ? 'Resume' : 'Pause';
     }
 
+    function toggleWallSwitch() {
+      wallSwitchState = !wallSwitchState;
+    }
+
     restartButton.addEventListener('click', function () {
       restartGame();
     });
 
     pauseButton.addEventListener('click', function () {
       togglePause();
+    });
+
+    wallSwitchButton.addEventListener('click', function () {
+      toggleWallSwitch();
     });
 
     // Event listener for speed buttons
@@ -240,16 +263,16 @@
 
     function handleSnakeDirection() {
       if ((keyStates[37] || keyStates[65]) && snake.dx === 0) {
-        snake.dx = -grid;
+        snake.dx = wallSwitchState ? (snake.x <= 0 ? canvas.width - grid : -grid) : -grid;
         snake.dy = 0;
       } else if ((keyStates[38] || keyStates[87]) && snake.dy === 0) {
-        snake.dy = -grid;
+        snake.dy = wallSwitchState ? (snake.y <= 0 ? canvas.height - grid : -grid) : -grid;
         snake.dx = 0;
       } else if ((keyStates[39] || keyStates[68]) && snake.dx === 0) {
-        snake.dx = grid;
+        snake.dx = wallSwitchState ? (snake.x >= canvas.width - grid ? -canvas.width + grid : grid) : grid;
         snake.dy = 0;
       } else if ((keyStates[40] || keyStates[83]) && snake.dy === 0) {
-        snake.dy = grid;
+        snake.dy = wallSwitchState ? (snake.y >= canvas.height - grid ? -canvas.height + grid : grid) : grid;
         snake.dx = 0;
       }
     }
@@ -276,6 +299,9 @@
 
       count = 0;
       context.clearRect(0, 0, canvas.width, canvas.height);
+
+      snake.x = (snake.x + canvas.width) % canvas.width; // Ensure snake coordinates are positive
+      snake.y = (snake.y + canvas.height) % canvas.height;
 
       snake.x += snake.dx;
       snake.y += snake.dy;
