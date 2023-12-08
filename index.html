@@ -240,7 +240,7 @@
     var offLabel = document.getElementById('off-label');
     var speedButtons = document.querySelectorAll('.speed-button');
 
-    var highScore = localStorage.getItem('snakeHighScore') || 0;
+    var highScore = 0;
     var speed = 7; // Default speed
     var grid = 16;
     var count = 0;
@@ -274,7 +274,6 @@
       if (snake.cells.length > highScore) {
         highScore = snake.cells.length;
         highScoreElement.textContent = 'High Score: ' + highScore;
-        localStorage.setItem('snakeHighScore', highScore);
       }
     }
 
