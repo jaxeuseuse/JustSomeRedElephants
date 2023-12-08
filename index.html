@@ -79,26 +79,55 @@
       margin-right: 10px;
     }
 
-    #special-switch {
-      width: 60px;
-      height: 30px;
-      background: #555;
-      border-radius: 15px;
+    .switch {
       position: relative;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 5px;
-      box-sizing: border-box;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
     }
 
-    #toggle-circle {
-      width: 20px;
-      height: 20px;
-      background: #fff;
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #555;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
       border-radius: 50%;
-      transition: transform 0.3s;
-      margin-left: 5px;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
     }
 
     #on-label,
@@ -169,11 +198,12 @@
   <!-- Special switch -->
   <div id="special-switch-container">
     <div id="special-label">Special</div>
-    <div id="special-switch" onclick="toggleSpecialSwitch()">
-      <div id="off-label">OFF</div>
-      <div id="toggle-circle"></div>
-      <div id="on-label">ON</div>
-    </div>
+    <label class="switch">
+      <input type="checkbox" id="special-switch" onclick="toggleSpecialSwitch()">
+      <span class="slider"></span>
+    </label>
+    <div id="off-label">OFF</div>
+    <div id="on-label">ON</div>
   </div>
 
   <!-- Speed buttons -->
@@ -206,7 +236,6 @@
     var restartButton = document.getElementById('restart-button');
     var pauseButton = document.getElementById('pause-button');
     var specialSwitch = document.getElementById('special-switch');
-    var toggleCircle = document.getElementById('toggle-circle');
     var onLabel = document.getElementById('on-label');
     var offLabel = document.getElementById('off-label');
     var speedButtons = document.querySelectorAll('.speed-button');
@@ -278,7 +307,6 @@
 
     function toggleSpecialSwitch() {
       specialSwitchState = !specialSwitchState;
-      toggleCircle.style.transform = specialSwitchState ? 'translateX(30px)' : 'translateX(0)';
       onLabel.style.color = specialSwitchState ? 'green' : 'white';
       offLabel.style.color = specialSwitchState ? 'white' : 'red';
     }
