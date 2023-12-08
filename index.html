@@ -86,16 +86,34 @@
       border-radius: 15px;
       position: relative;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      box-sizing: border-box;
     }
 
     #toggle-circle {
-      width: 30px;
-      height: 30px;
+      width: 20px;
+      height: 20px;
       background: #fff;
       border-radius: 50%;
       transition: transform 0.3s;
-      position: absolute;
-      left: 0;
+      margin-left: 5px;
+    }
+
+    #on-label,
+    #off-label {
+      color: white;
+    }
+
+    #on-label {
+      margin-left: 5px;
+      font-weight: bold;
+    }
+
+    #off-label {
+      margin-right: 5px;
+      font-weight: bold;
     }
 
     #speed-buttons {
@@ -152,7 +170,9 @@
   <div id="special-switch-container">
     <div id="special-label">Special</div>
     <div id="special-switch" onclick="toggleSpecialSwitch()">
+      <div id="off-label">OFF</div>
       <div id="toggle-circle"></div>
+      <div id="on-label">ON</div>
     </div>
   </div>
 
@@ -187,6 +207,8 @@
     var pauseButton = document.getElementById('pause-button');
     var specialSwitch = document.getElementById('special-switch');
     var toggleCircle = document.getElementById('toggle-circle');
+    var onLabel = document.getElementById('on-label');
+    var offLabel = document.getElementById('off-label');
     var speedButtons = document.querySelectorAll('.speed-button');
 
     var highScore = 0;
@@ -257,6 +279,8 @@
     function toggleSpecialSwitch() {
       specialSwitchState = !specialSwitchState;
       toggleCircle.style.transform = specialSwitchState ? 'translateX(30px)' : 'translateX(0)';
+      onLabel.style.color = specialSwitchState ? 'green' : 'white';
+      offLabel.style.color = specialSwitchState ? 'white' : 'red';
     }
 
     restartButton.addEventListener('click', function () {
@@ -291,16 +315,16 @@
 
     function handleSnakeDirection() {
       if ((keyStates[37] || keyStates[65]) && snake.dx === 0) {
-        snake.dx = specialSwitchState ? (snake.x <= 0 ? canvas.width - grid : -grid) : -grid;
+        snake.dx = specialSwitchState ? (snake.x <= 0 ? grid : -grid) : -grid;
         snake.dy = 0;
       } else if ((keyStates[38] || keyStates[87]) && snake.dy === 0) {
-        snake.dy = specialSwitchState ? (snake.y <= 0 ? canvas.height - grid : -grid) : -grid;
+        snake.dy = specialSwitchState ? (snake.y <= 0 ? grid : -grid) : -grid;
         snake.dx = 0;
       } else if ((keyStates[39] || keyStates[68]) && snake.dx === 0) {
-        snake.dx = specialSwitchState ? (snake.x >= canvas.width - grid ? -canvas.width + grid : grid) : grid;
+        snake.dx = specialSwitchState ? (snake.x >= canvas.width - grid ? -grid : grid) : grid;
         snake.dy = 0;
       } else if ((keyStates[40] || keyStates[83]) && snake.dy === 0) {
-        snake.dy = specialSwitchState ? (snake.y >= canvas.height - grid ? -canvas.height + grid : grid) : grid;
+        snake.dy = specialSwitchState ? (snake.y >= canvas.height - grid ? -grid : grid) : grid;
         snake.dx = 0;
       }
     }
@@ -328,14 +352,17 @@
       count = 0;
       context.clearRect(0, 0, canvas.width, canvas.height);
 
-      snake.x = (snake.x + canvas.width) % canvas.width; // Ensure snake coordinates are positive
-      snake.y = (snake.y + canvas.height) % canvas.height;
-
       snake.x += snake.dx;
       snake.y += snake.dy;
 
       if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
-        handleGameOver();
+        if (!specialSwitchState) {
+          handleGameOver();
+        } else {
+          // Wrap around the canvas
+          snake.x = (snake.x + canvas.width) % canvas.width;
+          snake.y = (snake.y + canvas.height) % canvas.height;
+        }
       }
 
       snake.cells.unshift({ x: snake.x, y: snake.y });
