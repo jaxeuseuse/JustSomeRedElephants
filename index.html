@@ -254,10 +254,19 @@
       }
     }
 
+    function isGameOver() {
+      return gameOverPopup.style.display === 'block';
+    }
+
+    function handleGameOver() {
+      showGameOverPopup();
+      keyStates = {}; // Clear keyStates to stop snake movement
+    }
+
     function loop() {
       requestAnimationFrame(loop);
 
-      if (paused) {
+      if (paused || isGameOver()) {
         return;
       }
 
@@ -272,7 +281,7 @@
       snake.y += snake.dy;
 
       if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
-        showGameOverPopup();
+        handleGameOver();
       }
 
       snake.cells.unshift({ x: snake.x, y: snake.y });
@@ -298,7 +307,7 @@
 
         for (var i = index + 1; i < snake.cells.length; i++) {
           if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-            showGameOverPopup();
+            handleGameOver();
           }
         }
       });
