@@ -215,6 +215,8 @@
     <button class="speed-button" data-speed="5">DAMNNNN</button>
     <button class="speed-button" data-speed="6">PERFECT</button>
     <button class="speed-button" data-speed="7">DEFAULT</button>
+    <!-- New Yossi speed button -->
+    <button class="speed-button" data-speed="0.5">YOSSI</button>
   </div>
 
   <div id="speed-buttons-right">
@@ -322,7 +324,7 @@
     // Event listener for speed buttons
     speedButtons.forEach(function (button) {
       button.addEventListener('click', function () {
-        speed = parseInt(button.dataset.speed);
+        speed = parseFloat(button.dataset.speed);
       });
     });
 
