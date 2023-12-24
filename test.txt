@@ -288,7 +288,201 @@
   </div>
 
   <script>
-    // ... (Your existing Snake Game JavaScript code)
+    var canvas = document.getElementById('game');
+    var context = canvas.getContext('2d');
+    var scoreElement = document.getElementById('score');
+    var highScoreElement = document.getElementById('high-score');
+    var gameOverPopup = document.getElementById('game-over-popup');
+    var restartButton = document.getElementById('restart-button');
+    var pauseButton = document.getElementById('pause-button');
+    var specialSwitch = document.getElementById('special-switch');
+    var onLabel = document.getElementById('on-label');
+    var offLabel = document.getElementById('off-label');
+    var speedButtons = document.querySelectorAll('.speed-button');
+
+    var highScore = 0;
+    var speed = 6; // Default speed
+    var grid = 16;
+    var count = 0;
+    var paused = false;
+    var specialSwitchState = false;
+    var keyStates = {};
+
+    var snake = {
+      x: 160,
+      y: 160,
+      dx: 0,
+      dy: 0,
+      cells: [],
+      maxCells: 1
+    };
+
+    var apple = {
+      x: 320,
+      y: 320
+    };
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function updateScore() {
+      scoreElement.textContent = 'Score: ' + snake.cells.length;
+    }
+
+    function updateHighScore() {
+      if (snake.cells.length > highScore) {
+        highScore = snake.cells.length;
+        highScoreElement.textContent = 'High Score: ' + highScore;
+      }
+    }
+
+    function restartGame() {
+      snake.x = 160;
+      snake.y = 160;
+      snake.cells = [];
+      snake.maxCells = 1;
+      snake.dx = 0;
+      snake.dy = 0;
+
+      apple.x = getRandomInt(0, 25) * grid;
+      apple.y = getRandomInt(0, 25) * grid;
+
+      updateScore();
+      hideGameOverPopup();
+    }
+
+    function showGameOverPopup() {
+      gameOverPopup.style.display = 'block';
+    }
+
+    function hideGameOverPopup() {
+      gameOverPopup.style.display = 'none';
+    }
+
+    function togglePause() {
+      paused = !paused;
+      pauseButton.textContent = paused ? 'Resume' : 'Pause';
+    }
+
+    function toggleSpecialSwitch() {
+      specialSwitchState = !specialSwitchState;
+      onLabel.style.color = specialSwitchState ? 'green' : 'white';
+      offLabel.style.color = specialSwitchState ? 'white' : 'red';
+    }
+
+    restartButton.addEventListener('click', function () {
+      restartGame();
+    });
+
+    pauseButton.addEventListener('click', function () {
+      togglePause();
+    });
+
+    // Event listener for speed buttons
+    speedButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        speed = parseFloat(button.dataset.speed);
+      });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      keyStates[e.which] = true;
+
+      if (e.which === 32) {
+        togglePause();
+      } else if (!paused) {
+        handleSnakeDirection();
+      }
+    });
+
+    document.addEventListener('keyup', function (e) {
+      keyStates[e.which] = false;
+      handleSnakeDirection();
+    });
+
+    function handleSnakeDirection() {
+      if ((keyStates[37] || keyStates[65]) && snake.dx === 0) {
+        snake.dx = specialSwitchState ? (snake.x <= 0 ? grid : -grid) : -grid;
+        snake.dy = 0;
+      } else if ((keyStates[38] || keyStates[87]) && snake.dy === 0) {
+        snake.dy = specialSwitchState ? (snake.y <= 0 ? grid : -grid) : -grid;
+        snake.dx = 0;
+      } else if ((keyStates[39] || keyStates[68]) && snake.dx === 0) {
+        snake.dx = specialSwitchState ? (snake.x >= canvas.width - grid ? -grid : grid) : grid;
+        snake.dy = 0;
+      } else if ((keyStates[40] || keyStates[83]) && snake.dy === 0) {
+        snake.dy = specialSwitchState ? (snake.y >= canvas.height - grid ? -grid : grid) : grid;
+        snake.dx = 0;
+      }
+    }
+
+    function isGameOver() {
+      return gameOverPopup.style.display === 'block';
+    }
+
+    function handleGameOver() {
+      showGameOverPopup();
+      keyStates = {}; // Clear keyStates to stop snake movement
+    }
+
+    function loop() {
+      requestAnimationFrame(loop);
+
+      if (paused || isGameOver()) {
+        return;
+      }
+
+      if (++count < speed) {
+        return;
+      }
+
+      count = 0;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      snake.x += snake.dx;
+      snake.y += snake.dy;
+
+      if (snake.x < 0 || snake.x >= canvas.width || snake.y < 0 || snake.y >= canvas.height) {
+        if (!specialSwitchState) {
+          handleGameOver();
+        } else {
+          // Wrap around the canvas
+          snake.x = (snake.x + canvas.width) % canvas.width;
+          snake.y = (snake.y + canvas.height) % canvas.height;
+        }
+      }
+
+      snake.cells.unshift({ x: snake.x, y: snake.y });
+
+      if (snake.cells.length > snake.maxCells) {
+        snake.cells.pop();
+      }
+
+      context.fillStyle = 'red';
+      context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+      context.fillStyle = 'green';
+      snake.cells.forEach(function (cell, index) {
+        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+        if (cell.x === apple.x && cell.y === apple.y) {
+          snake.maxCells++;
+          apple.x = getRandomInt(0, 25) * grid;
+          apple.y = getRandomInt(0, 25) * grid;
+          updateScore();
+          updateHighScore();
+        }
+
+        for (var i = index + 1; i < snake.cells.length; i++) {
+          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+            handleGameOver();
+          }
+        }
+      });
+    }
+
+    requestAnimationFrame(loop);
 
     function getMagic8BallAnswer() {
       const questionInput = document.getElementById('question');
