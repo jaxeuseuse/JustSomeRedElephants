@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="/icon/favicon.png">
   <title>Snake Game</title>
   <style>
@@ -17,10 +19,12 @@
       justify-content: center;
       color: white;
       font-family: 'Arial', sans-serif;
+      overflow: hidden; /* Hide scrollbar */
     }
 
     canvas {
       border: 1px solid white;
+      margin-right: 20px; /* Adjust margin for the chat box */
     }
 
     #score {
@@ -182,6 +186,52 @@
       border: none;
       border-radius: 5px;
     }
+
+    #chat-box {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 300px;
+      background: #333;
+      border: 2px solid white;
+      border-radius: 5px;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: calc(100% - 20px);
+      color: white;
+    }
+
+    #question-container {
+      display: flex;
+      align-items: center;
+    }
+
+    #question {
+      flex: 1;
+      padding: 5px;
+      margin-right: 5px;
+    }
+
+    #ask-button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    #magic8ball-answer {
+      margin-top: 10px;
+    }
+
+    #magic8ball-container {
+      background: #555;
+      padding: 10px;
+      border-radius: 5px;
+      color: white;
+    }
+
   </style>
 </head>
 
@@ -226,15 +276,14 @@
     <button class="speed-button" data-speed="14">BRUH</button>
   </div>
 
-  <!-- Magic 8 Ball Feature -->
-  <div id="magic8ball-container">
-    <div id="question-container">
-      <label for="question">Ask a yes or no question:</label>
-      <input type="text" id="question" placeholder="Type your question...">
-      <button onclick="getMagic8BallAnswer()">Ask</button>
-    </div>
-    <div id="answer-container">
-      <p id="magic8ball-answer">Magic 8 Ball says:</p>
+  <!-- Chat Box for Magic 8 Ball -->
+  <div id="chat-box">
+    <div id="magic8ball-container">
+      <div id="question-container">
+        <input type="text" id="question" placeholder="Ask a yes or no question...">
+        <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
+      </div>
+      <div id="magic8ball-answer"></div>
     </div>
   </div>
 
@@ -434,7 +483,7 @@
     }
 
     requestAnimationFrame(loop);
-    
+
     function getMagic8BallAnswer() {
       const questionInput = document.getElementById('question');
       const answerElement = document.getElementById('magic8ball-answer');
@@ -442,18 +491,68 @@
       const question = questionInput.value.trim();
 
       if (question !== '') {
-        fetch(`https://yesno.wtf/api?question=${question}`)
-          .then(response => response.json())
-          .then(data => {
-            const answer = data.answer.charAt(0).toUpperCase() + data.answer.slice(1);
-            answerElement.textContent = `Magic 8 Ball says: ${answer}`;
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-          });
+        const answer = generateMagic8BallAnswer();
+        answerElement.innerHTML = `<strong>Magic 8 Ball says:</strong> ${answer}`;
+        addMessageToChat(question, answer);
       } else {
         answerElement.textContent = 'Please enter a question.';
       }
+    }
+
+    function generateMagic8BallAnswer() {
+      const responsesYes = [
+        "Absolutely!",
+        "For sure!",
+        "Definitely yes!",
+        "Yes, indeed!",
+        "As I see it, yes!",
+        "You can count on it!",
+        "Sure thing!",
+        "Affirmative!",
+        "Without a doubt!",
+        "Yes, definitely!",
+      ];
+
+      const responsesNo = [
+        "Nope!",
+        "Sorry, but no.",
+        "Don't count on it.",
+        "My sources say no.",
+        "Very doubtful.",
+        "No way!",
+        "I wouldn't bet on it.",
+        "Nah.",
+        "Not in a million years.",
+        "Negative.",
+      ];
+
+      const randomResponse = Math.random() < 0.5 ?
+        responsesYes[Math.floor(Math.random() * responsesYes.length)] :
+        responsesNo[Math.floor(Math.random() * responsesNo.length)];
+
+      return randomResponse;
+    }
+
+    function addMessageToChat(question, answer) {
+      const chatBox = document.getElementById('chat-box');
+      const messageContainer = document.createElement('div');
+      messageContainer.classList.add('message-container');
+
+      const questionElement = document.createElement('div');
+      questionElement.classList.add('question');
+      questionElement.textContent = question;
+
+      const answerElement = document.createElement('div');
+      answerElement.classList.add('answer');
+      answerElement.innerHTML = `<strong>Answer:</strong> ${answer}`;
+
+      messageContainer.appendChild(questionElement);
+      messageContainer.appendChild(answerElement);
+
+      chatBox.appendChild(messageContainer);
+
+      // Scroll to the bottom of the chat box to show the latest message
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
   </script>
 </body>
