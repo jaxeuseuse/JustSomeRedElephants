@@ -543,10 +543,10 @@
       "Absolutely!",
       "For sure, 100%",
       "Definitely yes!",
-      "FUCK YESA! 👍👍",
+      "FUCK YESA! 👍👍;",
       "As I see it, yes!",
       "✨You can count on it!✨",
-      "My undoubtably reliable sources say hell ya brother 👌",
+      "My undoubtably reliable sources say hell ya brother 👌;",
       "Yessir",
       "Without a doubt!",
       "Yes, definitely!",
@@ -559,7 +559,7 @@
       "My sources say nope...",
       "Very doubtful.",
       "No way 👎👎👎",
-      "I would not bet my left testicle on it fr fr",
+      "I wouldn't bet my left testicle on it fr fr",
       "Nah.",
       "Not in a million years.",
       "Nuh Uh",
@@ -575,35 +575,24 @@
   // Helper function to add messages to the chat box
   function addMessageToChat(question, answer) {
     const chatBox = document.getElementById('chat-box');
+    chatBox.innerHTML = ''; // Clear the entire chat box
 
-    // Create message container
+    // Display only the latest question and answer
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
 
-    // Display the question
     const questionElement = document.createElement('div');
     questionElement.classList.add('question');
     questionElement.textContent = question;
 
-    // Display the answer
     const answerElement = document.createElement('div');
     answerElement.classList.add('answer');
     answerElement.innerHTML = `<strong>Answer:</strong> ${answer}`;
 
-    // Append elements to the message container
     messageContainer.appendChild(questionElement);
     messageContainer.appendChild(answerElement);
 
-    // Append the message container to the chat box
     chatBox.appendChild(messageContainer);
-
-    // Limit the number of messages displayed
-    const messageContainers = chatBox.querySelectorAll('.message-container');
-    if (messageContainers.length > 5) {
-      chatBox.removeChild(messageContainers[0]);
-    }
-
-    // Scroll to the bottom of the chat box
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
