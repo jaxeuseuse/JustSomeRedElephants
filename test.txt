@@ -218,7 +218,12 @@
   </div>
 
   <div id="speed-buttons-right">
-    <!-- ... (Your existing speed buttons) ... -->
+    <button class="speed-button" data-speed="6">DEFAULT</button>
+    <button class="speed-button" data-speed="8">NOT BAD</button>
+    <button class="speed-button" data-speed="9">EASY</button>
+    <button class="speed-button" data-speed="10">MID</button>
+    <button class="speed-button" data-speed="12">SNAIL</button>
+    <button class="speed-button" data-speed="14">BRUH</button>
   </div>
 
   <!-- Magic 8 Ball Feature -->
