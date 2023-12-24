@@ -189,10 +189,9 @@
 
     #chat-box {
       position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      width: 300px;
+      bottom: 0;
+      left: 0;
+      width: 250px;
       background: #333;
       border: 2px solid white;
       border-radius: 5px;
@@ -207,10 +206,11 @@
       height: auto; /* Maintain the aspect ratio */
       margin-bottom: 10px; /* Adjust the margin based on your design */
     }
-    
+
     #question-container {
       display: flex;
       align-items: center;
+      justify-content: space-between;
     }
 
     #question {
@@ -230,6 +230,7 @@
 
     #magic8ball-answer {
       margin-top: 10px;
+      align-self: flex-start;
     }
 
     #magic8ball-container {
@@ -238,7 +239,6 @@
       border-radius: 5px;
       color: white;
     }
-
   </style>
 </head>
 
