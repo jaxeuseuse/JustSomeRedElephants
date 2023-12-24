@@ -201,6 +201,12 @@
       color: white;
     }
 
+    #eight-ball-image {
+      width: 50px; /* Adjust the width as needed */
+      height: auto; /* Maintain the aspect ratio */
+      margin-right: 10px; /* Adjust the margin based on your design */
+    }
+    
     #question-container {
       display: flex;
       align-items: center;
@@ -276,16 +282,19 @@
     <button class="speed-button" data-speed="14">BRUH</button>
   </div>
 
-  <!-- Chat Box for Magic 8 Ball -->
-  <div id="chat-box">
-    <div id="magic8ball-container">
-      <div id="question-container">
-        <input type="text" id="question" placeholder="Ask a yes or no question...">
-        <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
-      </div>
-      <div id="magic8ball-answer"></div>
+<!-- Chat Box for Magic 8 Ball -->
+<div id="chat-box">
+  <!-- Eight ball image -->
+  <img src="/img/8ball.png" alt="Magic 8 Ball" id="eight-ball-image">
+
+  <div id="magic8ball-container">
+    <div id="question-container">
+      <input type="text" id="question" placeholder="Ask a yes or no question...">
+      <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
     </div>
+    <div id="magic8ball-answer"></div>
   </div>
+</div>
 
   <script>
     var canvas = document.getElementById('game');
