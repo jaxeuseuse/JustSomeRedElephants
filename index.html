@@ -298,23 +298,23 @@
     <!-- Add your speed buttons here -->
   </div>
 
-  <!-- Chat Box for Magic 8 Ball -->
-  <div id="chat-box">
-    <!-- Eight ball image -->
-    <div id="magic8ball-container">
-      <img src="/img/8ball.png" alt="Magic 8 Ball" id="eight-ball-image">
-      <div id="magic8ball-answer-container">
-        <div id="magic8ball-answer"></div>
-      </div>
-    </div>
-
-    <div id="question-container">
-      <input type="text" id="question" placeholder="Ask anything">
-      <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
+<!-- Chat Box for Magic 8 Ball -->
+<div id="chat-box">
+  <!-- Eight ball image -->
+  <div id="magic8ball-container">
+    <img src="/img/8ball.png" alt="Magic 8 Ball" id="eight-ball-image">
+    <div id="magic8ball-answer-container">
+      <div id="magic8ball-answer"></div>
     </div>
   </div>
 
-  <script>
+  <div id="question-container">
+    <input type="text" id="question" placeholder="Ask anything">
+    <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
+  </div>
+</div>
+
+<script>
 var canvas = document.getElementById('game');
     var context = canvas.getContext('2d');
     var scoreElement = document.getElementById('score');
@@ -577,21 +577,30 @@ var apple = {
     // Adding missing variable declaration
     var questionInput = document.getElementById('question');
 
-    function getMagic8BallAnswer() {
-      const answerElement = document.getElementById('magic8ball-answer');
-      const question = questionInput.value.trim();
-
-      if (question !== '' && question !== 'Ask anything') {
-        const answer = generateMagic8BallAnswer();
-        answerElement.innerHTML = `<strong>Magic 8 Ball says:</strong> ${answer}`;
-        addMessageToChat(question, answer);
-        questionInput.value = 'Ask anything';
-        questionInput.style.color = 'gray';
-      } else {
-        answerElement.textContent = 'Ask me anything';
-      }
+  questionInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent the default behavior of the Enter key
+      getMagic8BallAnswer();
     }
-  </script>
+  });
+
+  function getMagic8BallAnswer() {
+    const answerElement = document.getElementById('magic8ball-answer');
+    const question = questionInput.value.trim();
+
+    if (question !== '' && question !== 'Ask anything') {
+      const answer = generateMagic8BallAnswer();
+      answerElement.innerHTML = `<strong>Magic 8 Ball says:</strong> ${answer}`;
+      addMessageToChat(question, answer);
+      questionInput.value = 'Ask anything';
+      questionInput.style.color = 'gray';
+    } else {
+      answerElement.textContent = 'Ask me anything';
+    }
+  }
+
+  // ... (rest of the code)
+</script>
 </body>
 
 </html>
