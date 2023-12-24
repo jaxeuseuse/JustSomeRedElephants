@@ -502,21 +502,6 @@ var apple = {
 
     requestAnimationFrame(loop);
     
-    function getMagic8BallAnswer() {
-      const answerElement = document.getElementById('magic8ball-answer');
-      const question = questionInput.value.trim();
-
-      if (question !== '' && question !== defaultInputText) {
-        const answer = generateMagic8BallAnswer();
-        answerElement.innerHTML = `<strong>Magic 8 Ball says:</strong> ${answer}`;
-        addMessageToChat(question, answer);
-        questionInput.value = defaultInputText;
-        questionInput.style.color = 'gray';
-      } else {
-        answerElement.textContent = 'Please enter a valid question.';
-      }
-    }
-
         function generateMagic8BallAnswer() {
       const responsesYes = [
         "Absolutely!",
