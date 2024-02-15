@@ -57,15 +57,18 @@
 
   <!-- Chat Box for Magic 8 Ball -->
   <div id="chat-box">
-    <!-- ... (rest of the Magic 8 Ball HTML) ... -->
     <!-- Magic 8 Ball Answer -->
-    <div id="magic8ball-answer"></div>
-  </div>
+    <div id="magic8ball-answer-container">
+      <div id="magic8ball-answer"></div>
 
-  <!-- Question input for Magic 8 Ball -->
-  <div id="question-container">
-    <input type="text" id="question" placeholder="Ask anything">
-    <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
+      <!-- Question input for Magic 8 Ball -->
+      <div id="question-container">
+        <input type="text" id="question" placeholder="Ask anything">
+        <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
+      </div>
+    </div>
+
+    <!-- ... (rest of the Magic 8 Ball HTML) ... -->
   </div>
 
   <script src="app.js"></script>
