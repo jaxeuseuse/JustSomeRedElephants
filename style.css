@@ -192,16 +192,16 @@ input:checked + .slider:before {
   color: white;
 }
 
-#eight-ball-image {
-  width: 50px; /* Adjust the width as needed */
-  height: auto; /* Maintain the aspect ratio */
-  margin-bottom: 10px; /* Adjust the margin based on your design */
+#magic8ball-answer-container {
+  display: flex;
+  flex-direction: column;
 }
 
 #question-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 10px; /* Adjust the margin as needed */
 }
 
 #question {
@@ -230,6 +230,33 @@ input:checked + .slider:before {
 }
 
 /* Add the new styles below this comment */
+#magic8ball-answer-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#question-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px; /* Adjust the margin as needed */
+}
+
+#question {
+  flex: 1;
+  padding: 5px;
+  margin-right: 5px;
+}
+
+#ask-button {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
 .message-container {
   display: flex;
   flex-direction: column;
