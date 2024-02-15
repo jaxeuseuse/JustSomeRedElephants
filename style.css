@@ -222,15 +222,7 @@ input:checked + .slider:before {
 #magic8ball-answer {
   margin-top: 10px;
   align-self: flex-start;
-}
-
-#question::selection {
-  background-color: transparent;
-}
-
-#magic8ball-container {
-  display: flex;
-  align-items: center;
+  color: white; /* Add text color styling */
 }
 
 #magic8ball-answer-container {
