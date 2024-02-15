@@ -37,15 +37,35 @@
   <!-- Speed buttons -->
   <div id="speed-buttons">
     <!-- ... (rest of the speed buttons HTML) ... -->
+    <button class="speed-button" data-speed="0.001">MAX LEVEL</button>
+    <button class="speed-button" data-speed="0.01">GOD MODE</button>
+    <button class="speed-button" data-speed="0.1">WTF</button>
+    <button class="speed-button" data-speed="2">BANNANAS</button>
+    <button class="speed-button" data-speed="3">CRAZY</button>
+    <button class="speed-button" data-speed="5">DAMNNNN</button>
   </div>
 
   <div id="speed-buttons-right">
     <!-- ... (rest of the speed buttons HTML) ... -->
+    <button class="speed-button" data-speed="6">DEFAULT</button>
+    <button class="speed-button" data-speed="8">NOT BAD</button>
+    <button class="speed-button" data-speed="9">EASY</button>
+    <button class="speed-button" data-speed="10">MID</button>
+    <button class="speed-button" data-speed="12">SNAIL</button>
+    <button class="speed-button" data-speed="14">BRUH</button>
   </div>
 
   <!-- Chat Box for Magic 8 Ball -->
   <div id="chat-box">
     <!-- ... (rest of the Magic 8 Ball HTML) ... -->
+    <!-- Magic 8 Ball Answer -->
+    <div id="magic8ball-answer"></div>
+  </div>
+
+  <!-- Question input for Magic 8 Ball -->
+  <div id="question-container">
+    <input type="text" id="question" placeholder="Ask anything">
+    <button id="ask-button" onclick="getMagic8BallAnswer()">Ask</button>
   </div>
 
   <script src="app.js"></script>
