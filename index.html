@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+  <h1>This is a heading</h1>
+  <p>This is a paragraph.</p>
+  <div>This is a box</div>
+  <input type="text" id="mytextbox" class="textbox" placeholder="Enter text here">
+  <button type="button" onclick="outputText()">Output text</button>
+  <div id="outputbox" class="textbox">
+    <div id="display_input_to_output_box"></div>
+  </div>
+  <form id="uploadForm" method="post" enctype="multipart/form-data" action="upload.php">
+    <input name="file" id="fileInput" type="file" multiple>
+    <button type="submit">Upload</button>
+  </form>
+  
+  <div class="images">
+    <img id="uploadedImage" src="" alt="" width="300" height="200">
+  </div>
+        
+  <div id="image-viewer">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="full-image">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
