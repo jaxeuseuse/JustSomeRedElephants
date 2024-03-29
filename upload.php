@@ -1,6 +1,6 @@
 <?php
-$targetDir = "/var/www/taken/";
-chmod("/var/www/taken/",0777);
+$targetDir = "/php_files/";
+chmod("/php_files/",0777);
 if (!empty($_FILES["file"])) {
     $fileName = basename($_FILES["file"]["name"]);
     $targetFilePath = $targetDir . $fileName;
